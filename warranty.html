@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Warranty Verification</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      padding: 20px;
+    }
+    .card {
+      background: white;
+      padding: 20px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .active { color: green; font-weight: bold; }
+    .expired { color: red; font-weight: bold; }
+    .btn {
+      display: inline-block;
+      padding: 10px 15px;
+      background: #007bff;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Warranty Verification</h2>
+
+<div class="card">
+  <p><b>Customer Name:</b> <span id="name"></span></p>
+  <p><b>Laptop Model:</b> <span id="model"></span></p>
+  <p><b>Service Performed:</b> <span id="service"></span></p>
+</div>
+
+<div class="card">
+  <p><b>Warranty Start:</b> <span id="start"></span></p>
+  <p><b>Warranty Expiry:</b> <span id="exp"></span></p>
+  <p><b>Status:</b> <span id="status"></span></p>
+</div>
+
+<div class="card">
+  <a id="invoiceLink" class="btn" target="_blank">Download Invoice</a>
+</div>
+
+<div class="card">
+  <h3>Warranty Claim Procedure</h3>
+  <img src="claim_warranty.jpg" style="width:100%; border-radius:6px;">
+</div>
+
+
+<script>
+  const p = new URLSearchParams(window.location.search);
+
+  // 🔐 TOKEN SECURITY CHECK (PALING ATAS)
+  const token = p.get("token");
+  if (!token || token.length < 10) {
+    document.body.innerHTML = "<h2>Unauthorized access</h2>";
+    throw new Error("Invalid token");
+  }
+
+  // BASIC INFO
+  document.getElementById("name").textContent = p.get("name") || "-";
+  document.getElementById("model").textContent = p.get("model") || "-";
+  document.getElementById("service").textContent = p.get("service") || "-";
+  document.getElementById("start").textContent = p.get("start") || "-";
+  document.getElementById("exp").textContent = p.get("exp") || "-";
+
+  // WARRANTY STATUS
+  const expiry = new Date(p.get("exp"));
+  const today = new Date();
+  const statusEl = document.getElementById("status");
+
+  let isActive = false;
+
+  if (!isNaN(expiry)) {
+    if (today <= expiry) {
+      statusEl.textContent = "ACTIVE";
+      statusEl.className = "active";
+      isActive = true;
+    } else {
+      statusEl.textContent = "EXPIRED";
+      statusEl.className = "expired";
+    }
+  } else {
+    statusEl.textContent = "-";
+  }
+
+  // INVOICE LINK (ONLY IF ACTIVE)
+  const invoice = p.get("invoice");
+  const invoiceBtn = document.getElementById("invoiceLink");
+
+  if (invoice && isActive) {
+    invoiceBtn.href = "jobsheet/" + invoice;
+  } else {
+    invoiceBtn.style.display = "none";
+  }
+</script>
+
+
+</body>
+</html>
