@@ -57,10 +57,6 @@
 
 
 <div class="card">
-  <a id="invoiceLink" class="btn" target="_blank">Download Invoice</a>
-</div>
-
-<div class="card">
   <h3>Warranty Claim Procedure</h3>
   <img src="claim_warranty.jpg" style="width:100%; border-radius:6px;">
 </div>
@@ -107,18 +103,10 @@
     window.print();
   }
 
-  // INVOICE LINK (ONLY IF ACTIVE)
-  const invoice = p.get("invoice");
-  const invoiceBtn = document.getElementById("invoiceLink");
-
-  if (invoice && isActive) {
-  invoiceBtn.href = invoice;
-} else {
-  invoiceBtn.style.display = "none";
-}
 
 </script>
 
 
 </body>
 </html>
+
